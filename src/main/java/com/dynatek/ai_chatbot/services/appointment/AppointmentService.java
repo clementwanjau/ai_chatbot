@@ -2,6 +2,8 @@ package com.dynatek.ai_chatbot.services.appointment;
 
 import com.dynatek.ai_chatbot.models.Appointment;
 
+import java.util.List;
+
 /**
  * This interface defines the contract for appointment-related services.
  * It provides methods to save, retrieve, delete, and update appointments.
@@ -56,16 +58,17 @@ public interface AppointmentService {
      */
     void updateAppointment(Long id, Appointment appointment);
 
+
     /**
-     * Notify participants about the appointment.
+     * Retrieve a list of upcoming appointments.
      *
      * <p>
-     * This method is responsible for sending notifications to all participants
-     * of the appointment. It can be used to inform them about the details
-     * of the appointment, any changes made, or reminders.
+     * This method is responsible for fetching a list of appointments that
+     * are scheduled for the future. It can be used to display a user's
+     * upcoming appointments or to manage the schedule.
      * </p>
      *
-     * @param appointment The appointment to notify participants about.
+     * @return A list of upcoming appointments.
      */
-    void notifyParticipants(Appointment appointment);
+    List<Appointment> getUpcomingAppointments();
 }

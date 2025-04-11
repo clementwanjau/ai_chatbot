@@ -5,16 +5,18 @@ import com.dynatek.ai_chatbot.ItemNotFoundException;
 import com.dynatek.ai_chatbot.models.Appointment;
 import com.dynatek.ai_chatbot.repositories.appointment.AppointmentRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class DefaultAppointmentService
         implements AppointmentService {
-    private final Logger log = Logger.getLogger(DefaultAppointmentService.class.getName());
-
     private final AppointmentRepository appointmentRepository;
 
     @Override
@@ -22,7 +24,7 @@ public class DefaultAppointmentService
         try {
             return appointmentRepository.save(appointment);
         } catch (Exception e) {
-            log.warning(String.format("Error saving appointment: %s", appointment.toString()));
+            log.error("Error saving appointment: {}", appointment.toString());
             throw new DbException(String.format("Error saving appointment: %s", e.getMessage()), e);
         }
     }
@@ -33,7 +35,7 @@ public class DefaultAppointmentService
             return appointmentRepository.findById(id)
                                         .orElseThrow(() -> new ItemNotFoundException(String.format("Appointment with id %d not found.", id)));
         } catch (Exception e) {
-            log.warning(String.format("Error retrieving appointment with id %d: %s", id, e.getMessage()));
+            log.error("Error retrieving appointment with id '{}': {}", id, e.getMessage());
             throw new DbException(String.format("Error retrieving appointment with id %d: %s", id, e.getMessage()), e);
         }
     }
@@ -46,7 +48,7 @@ public class DefaultAppointmentService
             }
             appointmentRepository.deleteById(id);
         } catch (Exception e) {
-            log.warning(String.format("Error deleting appointment with id %d: %s", id, e.getMessage()));
+            log.error("Error deleting appointment with id '{}': {}", id, e.getMessage());
             throw new DbException(String.format("Error deleting appointment with id %d: %s", id, e.getMessage()), e);
         }
     }
@@ -59,24 +61,25 @@ public class DefaultAppointmentService
             }
             appointmentRepository.save(appointment);
         } catch (Exception e) {
-            log.warning(String.format("Error updating appointment with id %d: %s", id, e.getMessage()));
+            log.error("Error updating appointment with id '{}': {}", id, e.getMessage());
             throw new DbException(String.format("Error updating appointment with id %d: %s", id, e.getMessage()), e);
         }
     }
 
     @Override
-    public void notifyParticipants(Appointment appointment) {
-        log.info(String.format("Hello %s, you have an appointment scheduled on %s at %s with %s for viewing the property at %s.",
-                        appointment.getTenantContact()
-                                   .getName(),
-                        appointment.getScheduledAt()
-                                   .toLocalDate(),
-                        appointment.getScheduledAt()
-                                   .toLocalTime(),
-                        appointment.getLandlordContact()
-                                   .getName(),
-                        appointment.getPropertyAddress()
-                )
-        );
+    public List<Appointment> getUpcomingAppointments() {
+        // Get all the appointments whose scheduledAt is exactly 1 hour from now ignoring any precision below a minute
+        // This is ugly because we run the scheduled task every minute and that means we'll run a call to the db
+        // every single minute. Not the best idea.
+        try {
+            LocalDateTime oneHourFromNow =
+                    LocalDateTime.now()
+                                 .plusHours(1)
+                                 .truncatedTo(ChronoUnit.MINUTES);
+            return appointmentRepository.findAllByScheduledAtTruncatedToMinute(oneHourFromNow);
+        } catch (Exception e) {
+            log.error("Error getting upcoming appointments: {}", e.getMessage());
+            throw new DbException(String.format("Error getting upcoming appointments: %s", e.getMessage()), e);
+        }
     }
 }
