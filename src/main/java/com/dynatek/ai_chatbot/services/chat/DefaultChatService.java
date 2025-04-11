@@ -1,6 +1,7 @@
 package com.dynatek.ai_chatbot.services.chat;
 
 import com.dynatek.ai_chatbot.models.LLMApiResponse;
+import com.dynatek.ai_chatbot.services.appointment.AppointmentService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -24,16 +25,18 @@ import java.util.Map;
 @Service
 public class DefaultChatService
         implements ChatService {
+    private final AppointmentService appointmentService;
 
     private final ChatClient chatClient;
 
     @Value("classpath:prompts/template.st")
     private Resource ragPromptTemplate;
 
-    DefaultChatService(ChatClient.Builder clientBuilder) {
+    DefaultChatService(ChatClient.Builder clientBuilder, AppointmentService appointmentService) {
         this.chatClient = clientBuilder
                 .defaultAdvisors(new MessageChatMemoryAdvisor(new InMemoryChatMemory()))
                 .build();
+        this.appointmentService = appointmentService;
     }
 
     @Override
@@ -59,6 +62,7 @@ public class DefaultChatService
         if (apiResponse.status()
                        .isSuccess()) {
             // Persist the appointment to the database
+            appointmentService.saveAppointment(apiResponse.appointment());
         }
         return apiResponse;
     }
