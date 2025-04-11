@@ -50,9 +50,11 @@ public class DefaultChatService
                                           .chatResponse();
         assert response != null;
         LLMApiResponse apiResponse =
-                converter.convert(response.getResult()
-                                          .getOutput()
-                                          .getText());
+                converter.convert(
+                        response.getResult()
+                                .getOutput()
+                                .getText()
+                );
         assert apiResponse != null;
         if (apiResponse.status()
                        .isSuccess()) {
