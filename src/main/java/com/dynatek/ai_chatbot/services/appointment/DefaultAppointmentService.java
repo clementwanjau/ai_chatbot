@@ -1,5 +1,6 @@
 package com.dynatek.ai_chatbot.services.appointment;
 
+import com.dynatek.ai_chatbot.DbException;
 import com.dynatek.ai_chatbot.ItemNotFoundException;
 import com.dynatek.ai_chatbot.models.Appointment;
 import com.dynatek.ai_chatbot.repositories.appointment.AppointmentRepository;
@@ -18,29 +19,49 @@ public class DefaultAppointmentService
 
     @Override
     public Appointment saveAppointment(Appointment appointment) {
-        return appointmentRepository.save(appointment);
-    }
-
-    @Override
-    public Appointment getAppointmentById(Long id) throws ItemNotFoundException {
-        return appointmentRepository.findById(id)
-                                    .orElseThrow(() -> new ItemNotFoundException(String.format("Appointment with id %d not found.", id)));
-    }
-
-    @Override
-    public void deleteAppointment(Long id) throws ItemNotFoundException {
-        if (!appointmentRepository.existsById(id)) {
-            throw new ItemNotFoundException(String.format("Appointment with id %d not found.", id));
+        try {
+            return appointmentRepository.save(appointment);
+        } catch (Exception e) {
+            log.warning(String.format("Error saving appointment: %s", appointment.toString()));
+            throw new DbException(String.format("Error saving appointment: %s", e.getMessage()), e);
         }
-        appointmentRepository.deleteById(id);
+    }
+
+    @Override
+    public Appointment getAppointmentById(Long id) {
+        try {
+            return appointmentRepository.findById(id)
+                                        .orElseThrow(() -> new ItemNotFoundException(String.format("Appointment with id %d not found.", id)));
+        } catch (Exception e) {
+            log.warning(String.format("Error retrieving appointment with id %d: %s", id, e.getMessage()));
+            throw new DbException(String.format("Error retrieving appointment with id %d: %s", id, e.getMessage()), e);
+        }
+    }
+
+    @Override
+    public void deleteAppointment(Long id) {
+        try {
+            if (!appointmentRepository.existsById(id)) {
+                throw new ItemNotFoundException(String.format("Appointment with id %d not found.", id));
+            }
+            appointmentRepository.deleteById(id);
+        } catch (Exception e) {
+            log.warning(String.format("Error deleting appointment with id %d: %s", id, e.getMessage()));
+            throw new DbException(String.format("Error deleting appointment with id %d: %s", id, e.getMessage()), e);
+        }
     }
 
     @Override
     public void updateAppointment(Long id, Appointment appointment) {
-        if (!appointmentRepository.existsById(id)) {
-            throw new ItemNotFoundException(String.format("Appointment with id %d not found.", id));
+        try {
+            if (!appointmentRepository.existsById(id)) {
+                throw new ItemNotFoundException(String.format("Appointment with id %d not found.", id));
+            }
+            appointmentRepository.save(appointment);
+        } catch (Exception e) {
+            log.warning(String.format("Error updating appointment with id %d: %s", id, e.getMessage()));
+            throw new DbException(String.format("Error updating appointment with id %d: %s", id, e.getMessage()), e);
         }
-        appointmentRepository.save(appointment);
     }
 
     @Override

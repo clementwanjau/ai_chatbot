@@ -1,6 +1,5 @@
 package com.dynatek.ai_chatbot.services.appointment;
 
-import com.dynatek.ai_chatbot.ItemNotFoundException;
 import com.dynatek.ai_chatbot.models.Appointment;
 
 /**
@@ -28,7 +27,7 @@ public interface AppointmentService {
      * @param id The ID of the appointment to retrieve.
      * @return The appointment with the specified ID.
      */
-    Appointment getAppointmentById(Long id) throws ItemNotFoundException;
+    Appointment getAppointmentById(Long id);
 
     /**
      * Delete an appointment by its ID.
@@ -41,7 +40,7 @@ public interface AppointmentService {
      *
      * @param id The ID of the appointment to delete.
      */
-    void deleteAppointment(Long id) throws ItemNotFoundException;
+    void deleteAppointment(Long id);
 
     /**
      * Update an existing appointment.

@@ -62,7 +62,14 @@ public class DefaultChatService
         if (apiResponse.status()
                        .isSuccess()) {
             // Persist the appointment to the database
-            appointmentService.saveAppointment(apiResponse.appointment());
+            try {
+                appointmentService.saveAppointment(apiResponse.appointment());
+            } catch (Exception e) {
+                // Handle the exception if saving fails
+                apiResponse = new LLMApiResponse(LLMApiResponse.ParsingResult.FAILURE,
+                        "Failed to save appointment: " + e.getMessage(),
+                        null);
+            }
         }
         return apiResponse;
     }
