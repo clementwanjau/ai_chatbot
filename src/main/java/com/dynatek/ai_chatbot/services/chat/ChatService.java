@@ -1,5 +1,7 @@
 package com.dynatek.ai_chatbot.services.chat;
 
+import com.dynatek.ai_chatbot.models.LLMApiResponse;
+
 public interface ChatService {
     /**
      * This method is used to process the message sent by the user.
@@ -10,5 +12,5 @@ public interface ChatService {
      * @param message The raw message sent by the user.
      * @return The response from the LLM.
      */
-    String processMessage(String message);
+    LLMApiResponse processMessage(String message);
 }

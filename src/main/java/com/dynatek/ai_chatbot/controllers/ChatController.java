@@ -1,5 +1,6 @@
 package com.dynatek.ai_chatbot.controllers;
 
+import com.dynatek.ai_chatbot.models.LLMApiResponse;
 import com.dynatek.ai_chatbot.services.chat.ChatService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +15,10 @@ public class ChatController {
     private final ChatService chatService;
 
     @GetMapping
-    public void handleMessage(
+    public LLMApiResponse handleMessage(
             @RequestParam(value = "message")
             String message
     ) {
-        try {
-            String response = chatService.processMessage(message);
-            System.out.println("Response: " + response);
-        } catch (Exception e) {
-            System.err.println("Error processing message: " + e.getMessage());
-        }
+        return chatService.processMessage(message);
     }
 }
