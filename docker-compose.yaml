@@ -1,0 +1,15 @@
+volumes:
+  postgres_data:
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_ai_chatbot
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_chatbot
+    ports:
+      - "54322:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data

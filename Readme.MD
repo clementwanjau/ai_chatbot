@@ -1,3 +1,3 @@
 # AI Chatbot
 
-This is a simple AI chatbot that uses the OpenAI API for handling property viewing appointments.
+This is a simple AI chatbot that uses the DeepSeek API for handling property viewing appointments.
