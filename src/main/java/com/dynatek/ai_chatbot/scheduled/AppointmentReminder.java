@@ -7,12 +7,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * Scheduled task to send reminders for upcoming appointments.
+ */
 @Slf4j
 @Component
 @AllArgsConstructor
 public class AppointmentReminder {
     private final AppointmentService appointmentService;
 
+    /**
+     * Send reminder notifications for upcoming appointments.
+     * <p>
+     * The participants are notified one hour earlier.
+     */
     @Scheduled(fixedDelay = 1000)
     public void sendAppointmentReminders() {
         try {
