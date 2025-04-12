@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 @EnableWebSecurity
 @AllArgsConstructor
 @EnableMethodSecurity
+@EnableGlobalAuthentication
 public class SecurityConfig {
     private final String[] WHITELIST_URLS = {
             "/api/v1/auth/**",
@@ -35,7 +37,8 @@ public class SecurityConfig {
     };
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private LogoutHandler logoutHandler;
+    private final LogoutHandler logoutHandler;
+    private final Http401ForbiddenEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -52,6 +55,9 @@ public class SecurityConfig {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authenticationProvider(authenticationProvider)
+            .exceptionHandling((exceptionHandling) ->
+                    exceptionHandling.authenticationEntryPoint(authenticationEntryPoint)
+            )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .logout(logout ->
                     logout.logoutUrl("/api/v1/auth/logout")
