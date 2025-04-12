@@ -21,7 +21,7 @@ public class AppointmentReminder {
      * <p>
      * The participants are notified one hour earlier.
      */
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 10000)
     public void sendAppointmentReminders() {
         try {
             for (Appointment appointment : appointmentService.getUpcomingAppointments()) {
