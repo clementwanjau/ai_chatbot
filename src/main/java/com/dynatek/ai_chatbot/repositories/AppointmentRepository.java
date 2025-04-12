@@ -1,4 +1,4 @@
-package com.dynatek.ai_chatbot.repositories.appointment;
+package com.dynatek.ai_chatbot.repositories;
 
 import com.dynatek.ai_chatbot.models.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;

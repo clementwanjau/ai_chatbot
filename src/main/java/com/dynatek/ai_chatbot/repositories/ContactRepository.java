@@ -1,4 +1,4 @@
-package com.dynatek.ai_chatbot.repositories.contact;
+package com.dynatek.ai_chatbot.repositories;
 
 import com.dynatek.ai_chatbot.models.Contact;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -45,8 +45,22 @@ public class User
      */
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(Role.USER.toString()));
+    }
+
+    /**
+     * A role is a set of permissions that a user has in the system.
+     */
+    public enum Role {
+        /**
+         * The user role.
+         * This role is assigned to regular users of the system.
+         */
+        USER
     }
 }

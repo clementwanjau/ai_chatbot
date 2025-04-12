@@ -2,7 +2,7 @@ package com.dynatek.ai_chatbot.services.contact;
 
 import com.dynatek.ai_chatbot.DbException;
 import com.dynatek.ai_chatbot.models.Contact;
-import com.dynatek.ai_chatbot.repositories.contact.ContactRepository;
+import com.dynatek.ai_chatbot.repositories.ContactRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

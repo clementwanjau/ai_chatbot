@@ -3,7 +3,7 @@ package com.dynatek.ai_chatbot.services.appointment;
 import com.dynatek.ai_chatbot.DbException;
 import com.dynatek.ai_chatbot.ItemNotFoundException;
 import com.dynatek.ai_chatbot.models.Appointment;
-import com.dynatek.ai_chatbot.repositories.appointment.AppointmentRepository;
+import com.dynatek.ai_chatbot.repositories.AppointmentRepository;
 import com.dynatek.ai_chatbot.services.contact.ContactService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
