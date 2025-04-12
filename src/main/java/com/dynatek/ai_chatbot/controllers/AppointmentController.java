@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "api/v1/appointment")
+@RequestMapping(path = "api/v1/appointments")
 public class AppointmentController {
     private final AppointmentService appointmentService;
 

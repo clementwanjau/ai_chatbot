@@ -43,7 +43,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorizeRequests ->
                     authorizeRequests.requestMatchers(WHITELIST_URLS)
                                      .permitAll()
-                                     .requestMatchers("/api/v1/user/**", "/api/v1/chat/**", "/api/v1/appointment/**")
+                                     .requestMatchers("/api/v1/user/**", "/api/v1/chat/**", "/api/v1/appointments/**")
                                      .hasAnyRole(User.Role.USER.name())
                                      .anyRequest()
                                      .authenticated()
