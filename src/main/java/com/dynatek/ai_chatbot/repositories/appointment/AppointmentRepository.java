@@ -13,7 +13,7 @@ import java.util.List;
 public interface AppointmentRepository
         extends JpaRepository<Appointment, Long> {
 
-    @Query("SELECT a FROM Appointment a WHERE TRUNCATE(a.scheduledAt, 'MINUTE') = :targetTimeTruncated")
+    @Query("SELECT a FROM Appointment a WHERE date_trunc('minute', a.scheduledAt) = :targetTimeTruncated")
     List<Appointment> findAllByScheduledAtTruncatedToMinute(
             @Param("targetTimeTruncated")
             LocalDateTime targetTimeTruncated);
