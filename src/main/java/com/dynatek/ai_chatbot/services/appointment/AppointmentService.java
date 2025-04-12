@@ -71,4 +71,17 @@ public interface AppointmentService {
      * @return A list of upcoming appointments.
      */
     List<Appointment> getUpcomingAppointments();
+
+    /**
+     * Retrieve a list of appointments for the current user.
+     *
+     * <p>
+     * This method is responsible for fetching a list of appointments that
+     * are associated with the current user. It can be used to display a
+     * user's appointments or to manage their schedule.
+     * </p>
+     *
+     * @return A list of appointments for the current user.
+     */
+    List<Appointment> getMyAppointments();
 }

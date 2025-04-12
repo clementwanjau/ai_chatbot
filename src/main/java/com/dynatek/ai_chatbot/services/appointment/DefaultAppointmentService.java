@@ -4,6 +4,7 @@ import com.dynatek.ai_chatbot.DbException;
 import com.dynatek.ai_chatbot.ItemNotFoundException;
 import com.dynatek.ai_chatbot.models.Appointment;
 import com.dynatek.ai_chatbot.repositories.appointment.AppointmentRepository;
+import com.dynatek.ai_chatbot.services.contact.ContactService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,17 @@ import java.util.List;
 public class DefaultAppointmentService
         implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
+    private final ContactService contactService;
 
     @Override
     public Appointment saveAppointment(Appointment appointment) {
         try {
+            Long landlordContactId = contactService.save(appointment.getLandlordContact());
+            Long tenantContactId = contactService.save(appointment.getTenantContact());
+            appointment.getLandlordContact()
+                       .setId(landlordContactId);
+            appointment.getTenantContact()
+                       .setId(tenantContactId);
             return appointmentRepository.save(appointment);
         } catch (Exception e) {
             log.error("Error saving appointment: {}", appointment.toString());
@@ -80,6 +88,16 @@ public class DefaultAppointmentService
         } catch (Exception e) {
             log.error("Error getting upcoming appointments: {}", e.getMessage());
             throw new DbException(String.format("Error getting upcoming appointments: %s", e.getMessage()), e);
+        }
+    }
+
+    @Override
+    public List<Appointment> getMyAppointments() {
+        try {
+            return appointmentRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error getting my appointments: {}", e.getMessage());
+            throw new DbException(String.format("Error getting my appointments: %s", e.getMessage()), e);
         }
     }
 }
