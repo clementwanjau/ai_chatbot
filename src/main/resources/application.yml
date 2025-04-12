@@ -3,9 +3,9 @@ spring:
     name: ai_chatbot
 
   datasource:
-    url: jdbc:postgresql://localhost:54322/ai_chatbot
-    username: postgres
-    password: postgres
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
